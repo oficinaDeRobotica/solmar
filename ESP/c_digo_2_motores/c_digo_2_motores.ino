@@ -21,10 +21,10 @@ const int ws_port = 1337;
   const int enable1Pin = 14;
   const int servoPin = 12;
 #else
-  const int motor1Pin1 = 14; 
+  const int motor1Pin1 = 15; 
   const int motor1Pin2 = 12; 
   const int enable1Pin = 13;
-  const int motor2Pin1 = 15; 
+  const int motor2Pin1 = 14; 
   const int motor2Pin2 = 4; 
   const int enable2Pin = 5;
 #endif
