@@ -40,6 +40,9 @@ int diff;
 int pinLedAzul = 15; // D8
 int pinLedVerde = 12; // D6
 int pinLedVermelho = 14; // D5
+const int cA = 0;
+const int cVe = 0;
+const int cV = 0;
 // tempo atual
 unsigned long currentTime = millis();
 // tempo passado
@@ -68,14 +71,20 @@ void moverRobo()
 
     // converte o valor do joystick para o valor correto para a ponte HAumenta a velocidade do motor
     v = map(py, -10, -100, 150, 255);
-    ;
+    cVe = map(py,-10,-100,250,0);
+    cV = map(py,-10,-100,0,250);
+    cA = 0;
   }
   else if (py > 0)
   {
     digitalWrite(m1p1, LOW);
     digitalWrite(m1p2, HIGH);
+    
 
     // converte o valor do joystick para o valor correto para a ponte H
+    cVe = map(py,10,100,250,0);
+    cA = map(py,10,100,0,250);
+    cV = 0;
     v = map(py, 10, 100, 150, 255);
   }
   // Faz com que o motor fique parado caso o joystick esteja centralizado
@@ -84,31 +93,20 @@ void moverRobo()
     digitalWrite(m1p1, HIGH);
     digitalWrite(m1p2, HIGH);
     v = 0;
+    cVe = 0;
   }
 
   diff = map(px, -100, 100, 0, 180);
   servo.write(diff);
 
-//Controle dos  Leds
-  ledBrilhoMIN = map(v,150,185,0,255)
-  ledBrilhoMED = map(v,185,220,0,255)
-  ledBrilhoMAX = map(v,225,255,0,255)
-
-  if(v < 185){
-      analogWrite(pinLedAzul,(ledBrilhoMIN - ledBrilhoMED));
-      
-  }
-  if(v >= 185 && v <=220){
-      analogWrite(pinLedVerde,(ledBrilhoMED - ledBrilhoMAX))
-  }
-  if(v >= 220){
-      analogWrite(pinLedVermelho,ledBrilhoMAX)
-  }
 #ifdef ESP32
   // o esp 32 nao suporta o analogWrite, logo, funcao diferente
   ledcWrite(pwmChannel, v);
 #else
   analogWrite(pwm1, v);
+  analogWrite(pinLedVermelho, cV);
+  analogWrite(pinLedVerde, cVe);
+  analogWrite(pinLedAzul, cA);
 #endif
 }
 
@@ -168,6 +166,9 @@ void setup()
   pinMode(m1p1, OUTPUT);
   pinMode(m1p2, OUTPUT);
   pinMode(pwm1, OUTPUT);
+  pinMode(pinLedAzul, OUTPUT);
+  pinMode(pinLedVerde, OUTPUT);
+  pinMode(pinLedVermelho, OUTPUT);
   servo.attach(servoPin);
 
 #ifdef ESP32
