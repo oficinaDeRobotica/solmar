@@ -96,7 +96,7 @@ void moverRobo()
     cVe = 0;
   }
 
-  diff = map(px, -100, 100, 0, 180);
+  diff = map(px, -100, 100, 180, 0);
   servo.write(diff);
 
 #ifdef ESP32
